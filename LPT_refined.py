@@ -46,7 +46,7 @@ warp = cv2.warpPolar(img, size, center, r, 256)
 warp_recovered = cv2.warpPolar(warp, size, center, r, flags=256+16)
 
 #%% Scaling
-scale = [2,2]
+scale = [1,1]
 rescaled = rescale(img, scale, multichannel=True)
 rescaled_warped = warp_polar(rescaled, scaling='log', multichannel=True)
 
@@ -69,8 +69,8 @@ for i in range(len(linear_dist)):
 # Deepcopy warped image to preserve original
 warp_sparse = deepcopy(warp)    
 
-columns = round(W*scale[0])
-rows = round(H*scale[0])
+columns = W
+rows = H
 
 # Loop through columns of warped image
 for i in range(columns-1):    
