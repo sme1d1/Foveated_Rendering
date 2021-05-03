@@ -15,11 +15,11 @@ from numpy.linalg import norm
 from sklearn.preprocessing import normalize
 from copy import deepcopy
 import random
-
+import time
 
 # Import Image
 filepath = os.path.dirname(__file__)
-filename = os.path.join(filepath, 'mountain.png')
+filename = os.path.join(filepath, 'fox.png')
 img = io.imread(filename)
 
 # Save Height and Width of Image to variables
@@ -40,11 +40,14 @@ size = (W,H)
 increased_size = (int(W*0.8), int(H*0.8))
 center = (x0,y0)
 
+#%%
+
+time1 = time.time()
 # Perform Log Polar Transform
 warp = cv2.warpPolar(img, size, center, r, 256)
 
 # Transform Log Polar back to Cartesian
-warp_recovered = cv2.warpPolar(warp, size, center, r, flags=256+16)
+#warp_recovered = cv2.warpPolar(warp, size, center, r, flags=256+16)
 
 # # Plots
 # fig, axes = plt.subplots(1, 3)
@@ -66,7 +69,7 @@ warp_recovered = cv2.warpPolar(warp, size, center, r, flags=256+16)
 # Normalize log dist
 
 # Set scalar variable
-a = 2.5
+a = 1.5
 
 # Create linear distribution from 0 to 1 as x values
 # 0 is pixel at center, 1 is pixel at furthest point from center
@@ -115,16 +118,27 @@ for i in range(columns-1):
             elif (len(warp_sparse[rounded_num[j], i]) == 3):
                 warp_sparse[rounded_num[j], i] = [255,255,255]
             
-
 sparse_recovered = cv2.warpPolar(warp_sparse, size, center, r, flags=256+16)
+# plt.figure(1)
+# plt.imshow(sparse_recovered)
+            
+# fig, axes = plt.subplots(1, 3)
+# ax = axes.ravel()
+# ax[0].imshow(warp)
+# ax[1].imshow(warp_sparse)
+# sparse_recovered = cv2.warpPolar(warp_sparse, size, center, r, flags=256+16)
+# ax[2].imshow(sparse_recovered)
+
 plt.figure(1)
 plt.imshow(sparse_recovered)
-            
-fig, axes = plt.subplots(1, 3)
-ax = axes.ravel()
-ax[0].imshow(warp)
-ax[1].imshow(warp_sparse)
-sparse_recovered = cv2.warpPolar(warp_sparse, size, center, r, flags=256+16)
-ax[2].imshow(sparse_recovered)
+time2 = time.time()
+print(time2 - time1)
+#%%
+time1 = time.time()
+plt.figure(2)
+plt.imshow(img)
+time2 = time.time()
+print(time2 - time1)
 
-time1 = 
+
+
