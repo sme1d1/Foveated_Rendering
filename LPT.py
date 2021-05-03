@@ -19,7 +19,7 @@ import random
 
 # Import Image
 filepath = os.path.dirname(__file__)
-filename = os.path.join(filepath, 'test.png')
+filename = os.path.join(filepath, 'mountain.png')
 img = io.imread(filename)
 
 # Save Height and Width of Image to variables
@@ -47,11 +47,11 @@ warp = cv2.warpPolar(img, size, center, r, 256)
 warp_recovered = cv2.warpPolar(warp, size, center, r, flags=256+16)
 
 # # Plots
-fig, axes = plt.subplots(1, 3)
-ax = axes.ravel()
-ax[0].imshow(img)
-ax[1].imshow(warp)
-ax[2].imshow(warp_recovered)
+# fig, axes = plt.subplots(1, 3)
+# ax = axes.ravel()
+# ax[0].imshow(img)
+# ax[1].imshow(warp)
+# ax[2].imshow(warp_recovered)
 
 
 
@@ -62,11 +62,11 @@ ax[2].imshow(warp_recovered)
 # ax[2].imshow(rescaled)
 # ax[3].imshow(rescaled_warped)
 
-#%%
+
 # Normalize log dist
 
 # Set scalar variable
-a = 10
+a = 2.5
 
 # Create linear distribution from 0 to 1 as x values
 # 0 is pixel at center, 1 is pixel at furthest point from center
@@ -98,11 +98,11 @@ for i in range(columns-1):
     if i != 0:
         # get number of pixels
         num_pixels = round(rows - (rows*log_dist[i]))
-        print(num_pixels)
+        #print(num_pixels)
         #print(num_pixels)
         # get pixel indices
         #random_num = np.random.random(num_pixels)*(rows-1)
-        random_num = random.choices(range(480), k=num_pixels)
+        random_num = random.sample(range(rows), k=num_pixels)
         #print(random_num)
         rounded_num = np.round(random_num).astype('int')
         #print(rounded_num)
@@ -110,14 +110,15 @@ for i in range(columns-1):
         #warp_sparse[i, rounded_num[0]] = np.nan
         # assign nan to pixel indices
         for j in range(len(rounded_num)-1):
-            #print(i,rounded_num[j])
-            warp_sparse[rounded_num[j], i] = [255,255,255,0]
+            if (len(warp_sparse[rounded_num[j], i]) == 4):
+                warp_sparse[rounded_num[j], i] = [255,255,255,0]
+            elif (len(warp_sparse[rounded_num[j], i]) == 3):
+                warp_sparse[rounded_num[j], i] = [255,255,255]
             
 
 sparse_recovered = cv2.warpPolar(warp_sparse, size, center, r, flags=256+16)
-plt.figure(2)
-plt.imshow(warp_sparse)
-#%%
+plt.figure(1)
+plt.imshow(sparse_recovered)
             
 fig, axes = plt.subplots(1, 3)
 ax = axes.ravel()
@@ -125,3 +126,5 @@ ax[0].imshow(warp)
 ax[1].imshow(warp_sparse)
 sparse_recovered = cv2.warpPolar(warp_sparse, size, center, r, flags=256+16)
 ax[2].imshow(sparse_recovered)
+
+time1 = 
