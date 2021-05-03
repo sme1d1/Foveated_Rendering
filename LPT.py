@@ -13,7 +13,7 @@ from skimage.transform import warp_polar, rescale
 import matplotlib.pyplot as plt
 from numpy.linalg import norm
 from sklearn.preprocessing import normalize
-    
+from copy import deepcopy
 
 #%%
 
@@ -33,11 +33,11 @@ y0 = H/2
 # Calculate radius as the distance from the center of the image to the corner.
 r = np.sqrt(x0**2 + y0**2)
 
-#%% LPT built-in
+##### LPT built-in
 
 # Initialize Variables
-size = (H,W)
-increased_size = (int(H), int(W))
+size = (W,H)
+increased_size = (int(W), int(H))
 center = (x0,y0)
 
 # Perform Log Polar Transform
@@ -47,10 +47,12 @@ warp = cv2.warpPolar(img, size, center, r, 256)
 warp_recovered = cv2.warpPolar(warp, size, center, r, flags=256+16)
 
 # Plots
-fig, axes = plt.subplots(1, 2)
+fig, axes = plt.subplots(1, 3)
 ax = axes.ravel()
 ax[0].imshow(img)
 ax[1].imshow(warp)
+ax[2].imshow(warp_recovered)
+
 
 
 #ax[2].imshow(warp_recovered)
@@ -63,7 +65,7 @@ ax[1].imshow(warp)
 #%% Normalize log dist
 
 # Set scalar variable
-a = 10
+a = 2
 
 # Create linear distribution from 0 to 1 as x values
 # 0 is pixel at center, 1 is pixel at furthest point from center
@@ -78,6 +80,27 @@ plt.plot(linear_dist, log_dist)
 plt.title("Inverse Exponential Distribution")
 plt.xlabel("Distance from center")
 plt.ylabel("Weight")
+
+#%% 
+
+warp_sparse = deepcopy(warp)
+
+for i in range(H):
+    for j in range(W):        
+        num = np.random.random()
+        if (np.random.random() > log_dist[j]):
+            warp_sparse[i, j] = np.nan
+
+sparse_recovered = cv2.warpPolar(warp_sparse, size, center, r, flags=256+16)
+plt.imshow(sparse_recovered)
+#%%
+            
+fig, axes = plt.subplots(1, 3)
+ax = axes.ravel()
+ax[0].imshow(warp)
+ax[1].imshow(warp_sparse)
+sparse_recovered = cv2.warpPolar(warp2, size, center, r, flags=256+16)
+ax[2].imshow(sparse_recovered)
 #%% Standard LPT from paper
 x0 = W/2
 y0 = H/2
