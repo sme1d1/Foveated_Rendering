@@ -167,11 +167,12 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 x_train, x_test = train_test_split(dataset, test_size=0.25)
 
+a = 1
+
 sparse_train = []
-normal_train = []
 xran = len(x_train)
 for i in range(xran):
-    pic = sparse(x_train[i,0], 0.75)
+    pic = sparse(x_train[i,0], a)
     sparse_train.append(pic)
     
     #cv2.imshow("testimage", sparse[i])  # show image
@@ -186,7 +187,7 @@ sparse_test = []
 
 xran = len(x_test)
 for i in range(xran):
-    pic = sparse(x_train[i,0], 0.75)
+    pic = sparse(x_train[i,0], a)
     sparse_test.append(pic)
     # zed = sparse(x_test[i,0], 1)
     # sparse_test.append(zed)
@@ -263,7 +264,7 @@ decoder = Model(encoded_input, decoder_layer(encoded_input))
 autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
 
 history = autoencoder.fit(sparse_train, normal_train,
-                          epochs=200,
+                          epochs=30,
                           batch_size=1024,
                           shuffle=True,
                           verbose=2,
